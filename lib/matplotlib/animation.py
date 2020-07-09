@@ -962,6 +962,19 @@ class Animation:
         self.event_source.remove_callback(self._step)
         self.event_source = None
 
+    def pause(self):
+        self.event_source.stop()
+        for ax in self._fig.get_axes():
+            for line in ax.get_lines():
+                line.set_animated(False)
+        self._fig.canvas.draw_idle()
+
+    def resume(self):
+        for ax in self._fig.get_axes():
+            for line in ax.get_lines():
+                line.set_animated(True)
+        self.event_source.start()
+
     def save(self, filename, writer=None, fps=None, dpi=None, codec=None,
              bitrate=None, extra_args=None, metadata=None, extra_anim=None,
              savefig_kwargs=None, *, progress_callback=None):
